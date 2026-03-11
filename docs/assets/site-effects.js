@@ -196,20 +196,19 @@ const initializeScrollChrome = () => {
 
   let lastScrollY = window.scrollY;
   let headerAnchorY = window.scrollY;
-  let mobileDownDistance = 0;
   let lastTouchY = null;
   let rafId = 0;
 
   const showHeader = (currentY) => {
     document.body.classList.remove("is-header-hidden");
     headerAnchorY = currentY;
-    mobileDownDistance = 0;
+    lastScrollY = currentY;
   };
 
   const hideHeader = (currentY) => {
     document.body.classList.add("is-header-hidden");
     headerAnchorY = currentY;
-    mobileDownDistance = 0;
+    lastScrollY = currentY;
   };
 
   const update = () => {
@@ -229,21 +228,13 @@ const initializeScrollChrome = () => {
     if (header && !header.classList.contains("is-open")) {
       const hidden = document.body.classList.contains("is-header-hidden");
       const isMobile = mobileBreakpoint.matches;
-      const hideThreshold = isMobile ? 52 : 84;
-      const revealThreshold = isMobile ? 0 : 10;
+      const hideThreshold = isMobile ? 56 : 84;
+      const revealThreshold = isMobile ? 8 : 10;
 
       if (currentY <= 18) {
         showHeader(currentY);
       } else if (isMobile) {
-        if (scrollDelta < 0) {
-          showHeader(currentY);
-        } else if (scrollDelta > 0) {
-          mobileDownDistance += scrollDelta;
-
-          if (!hidden && currentY > 132 && mobileDownDistance >= hideThreshold) {
-            hideHeader(currentY);
-          }
-        }
+        showHeader(currentY);
       } else if (scrollDelta > 0) {
         if (hidden) {
           headerAnchorY = currentY;
@@ -251,9 +242,9 @@ const initializeScrollChrome = () => {
           hideHeader(currentY);
         }
       } else if (scrollDelta < 0) {
-        if (hidden && headerAnchorY - currentY >= revealThreshold) {
+        if (hidden && (isMobile || headerAnchorY - currentY >= revealThreshold)) {
           showHeader(currentY);
-        } else if (!hidden) {
+        } else {
           headerAnchorY = Math.min(headerAnchorY, currentY);
         }
       }
