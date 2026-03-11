@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /docs/
+Disallow: /extracted-images/
+Disallow: /*Monsite*
+Disallow: /*Edouardpak.com*
+Disallow: /*.doc
+
+Sitemap: https://eduardpak.com/sitemap.xml
